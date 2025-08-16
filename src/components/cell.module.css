@@ -15,20 +15,31 @@
           border-color: rgb(86, 87, 88)
       }
 
-      &[data-animation='pop'] {
+      &[data-animation="shake"] {
+          animation-name: Shake;
+          animation-duration: 600ms;
+      }
+
+      &[data-animation="pop"] {
           animation-name: PopIn;
           animation-duration: 100ms;
       }
 
-      &.correct_position {
+      &[data-animation="flip"] {
+          animation-name: Flip;
+          animation-duration: 500ms;
+          animation-timing-function: ease-in;
+      }
+
+      &[data-state="correct_position"] {
           background: #538d4e;
       }
 
-      &.correct_letter {
+      &[data-state="correct_letter"] {
           background: #b59f3b;
       }
 
-      &.incorrect_letter {
+      &[data-state="incorrect_letter"] {
           background: #3a3a3c;
           border-color: #3a3a3c;
       }
@@ -44,5 +55,45 @@
       40% {
           transform: scale(1.1);
           opacity: 1;
+      }
+  }
+
+  @keyframes Shake {
+
+      10%,
+      90% {
+          transform: translateX(-1px);
+      }
+
+      20%,
+      80% {
+          transform: translateX(2px);
+      }
+
+      30%,
+      50%,
+      70% {
+          transform: translateX(-4px);
+      }
+
+      40%,
+      60% {
+          transform: translateX(4px);
+      }
+  }
+
+  @keyframes Flip {
+      0% {
+          transform: rotateX(0deg);
+          background: unset !important;
+      }
+
+      50% {
+          transform: rotateX(90deg);
+          background: unset !important;
+      }
+
+      100% {
+          transform: rotate(0deg)
       }
   }

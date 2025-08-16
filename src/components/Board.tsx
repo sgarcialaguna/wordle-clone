@@ -85,6 +85,7 @@ export default function Board() {
     currentRow: 0,
     rowStates: [],
   });
+  const [invalidRow, setInvalidRow] = useState<number | undefined>(undefined);
 
   async function handleKeyPress(ev: KeyboardEvent) {
     const key = ev.key;
@@ -100,7 +101,8 @@ export default function Board() {
     } else if (key === "Enter") {
       const currentGuess = state.guesses[state.currentRow];
       if (currentGuess.length < 5) {
-        alert("Not enough letters");
+        setInvalidRow(state.currentRow);
+        window.setTimeout(() => setInvalidRow(undefined), 600);
         return;
       }
       const { data } = await actions.evaluate(currentGuess);
@@ -118,7 +120,7 @@ export default function Board() {
 
   useEffect(() => {
     if (state.gameState === "lost") {
-      alert("OH NOES");
+      window.setTimeout(() => alert("OH NOES"), 250 * 5);
     } else if (state.gameState === "won") {
       const successMessages = [
         "Genius",
@@ -128,18 +130,23 @@ export default function Board() {
         "Great",
         "Phew",
       ];
-      alert(successMessages[state.currentRow - 1]);
+      window.setTimeout(
+        () => alert(successMessages[state.currentRow - 1]),
+        250 * 5
+      );
     }
   }, [state.gameState, state.currentRow]);
 
   return (
     <div className={styles.board}>
-      <Row guess={state.guesses[0]} state={state.rowStates[0]}></Row>
-      <Row guess={state.guesses[1]} state={state.rowStates[1]}></Row>
-      <Row guess={state.guesses[2]} state={state.rowStates[2]}></Row>
-      <Row guess={state.guesses[3]} state={state.rowStates[3]}></Row>
-      <Row guess={state.guesses[4]} state={state.rowStates[4]}></Row>
-      <Row guess={state.guesses[5]} state={state.rowStates[5]}></Row>
+      {[0, 1, 2, 3, 4, 5].map((index) => (
+        <Row
+          key={index}
+          guess={state.guesses[index]}
+          state={state.rowStates[index]}
+          invalid={invalidRow === index}
+        ></Row>
+      ))}
     </div>
   );
 }
