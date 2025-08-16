@@ -99,7 +99,6 @@ export default function Board() {
     rowStates: [],
     letterStates: {},
   });
-  console.log(state.letterStates);
   const [invalidRow, setInvalidRow] = useState<number | undefined>(undefined);
 
   async function handleKeyPress(ev: KeyboardEvent) {
