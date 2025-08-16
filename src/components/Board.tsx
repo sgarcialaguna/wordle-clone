@@ -4,10 +4,24 @@ import { useEffect, useReducer, useState } from "react";
 import styles from "./board.module.css";
 import Row from "./Row";
 
-function reducer(state, action) {
+declare type State = {
+  guesses: Array<string>;
+  currentRow: number;
+};
+
+declare type Action =
+  | {
+      type: "add_letter";
+      payload: {
+        key: string;
+      };
+    }
+  | { type: "remove_letter" };
+
+function reducer(state: State, action: Action) {
   switch (action.type) {
-    case "keydown": {
-      const key = action.payload;
+    case "add_letter": {
+      const { key } = action.payload;
       if (key.match(/^[a-z]$/)) {
         if (state.guesses[state.currentRow].length >= 5) {
           return state;
@@ -19,15 +33,26 @@ function reducer(state, action) {
 
         return {
           ...state,
-          guesses: state.guesses.map((guess, index) => {
-            if (index === state.currentRow) {
-              return guess + key;
-            }
-            return guess;
-          }),
+          guesses: [
+            ...state.guesses.slice(0, state.currentRow),
+            state.guesses[state.currentRow] + key,
+            ...state.guesses.slice(state.currentRow + 1),
+          ],
         };
       }
     }
+    case "remove_letter":
+      return {
+        ...state,
+        guesses: [
+          ...state.guesses.slice(0, state.currentRow),
+          state.guesses[state.currentRow].slice(
+            0,
+            state.guesses[state.currentRow].length - 1
+          ),
+          ...state.guesses.slice(state.currentRow + 1),
+        ],
+      };
     default: {
       return state;
     }
@@ -41,7 +66,13 @@ export default function Board() {
   });
 
   function handleKeyPress(ev: KeyboardEvent) {
-    dispatch({ type: "keydown", payload: ev.key.toLowerCase() });
+    const key = ev.key;
+    console.log(key);
+    if (key.match(/^[a-z]$/i)) {
+      dispatch({ type: "add_letter", payload: { key: ev.key.toLowerCase() } });
+    } else if (key === "Backspace") {
+      dispatch({ type: "remove_letter" });
+    }
   }
 
   useEffect(() => {
