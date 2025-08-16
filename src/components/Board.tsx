@@ -8,10 +8,12 @@ import toastStyles from "./customToast.module.css";
 
 import { actions } from "astro:actions";
 import CustomToast from "./CustomToast";
+import Keyboard from "./Keyboard";
 
 declare type GameState = "in_progress" | "lost" | "won";
 
 declare type State = {
+  letterStates: Record<string, RowState>;
   gameState: "in_progress" | "lost" | "won";
   guesses: Array<string>;
   currentRow: number;
@@ -63,6 +65,13 @@ function reducer(state: State, action: Action): State {
       };
     case "set_row_state": {
       let gameState: GameState = "in_progress";
+      let letterStates = { ...state.letterStates };
+      const currentGuess = state.guesses[state.currentRow];
+      for (let i = 0; i < currentGuess.length; i++) {
+        letterStates[currentGuess[i]] =
+          state.letterStates[currentGuess[i]] || action.payload[i];
+      }
+
       if (action.payload.every((s) => s === "correct_position")) {
         gameState = "won";
       } else if (state.currentRow === 5) {
@@ -73,6 +82,7 @@ function reducer(state: State, action: Action): State {
         currentRow: state.currentRow + 1,
         rowStates: [...state.rowStates, action.payload],
         gameState,
+        letterStates,
       };
     }
     default: {
@@ -87,7 +97,9 @@ export default function Board() {
     guesses: ["", "", "", "", "", ""],
     currentRow: 0,
     rowStates: [],
+    letterStates: {},
   });
+  console.log(state.letterStates);
   const [invalidRow, setInvalidRow] = useState<number | undefined>(undefined);
 
   async function handleKeyPress(ev: KeyboardEvent) {
@@ -160,6 +172,7 @@ export default function Board() {
         autoClose={false}
         toastClassName={toastStyles.customToast}
       />
+      <Keyboard letterStates={state.letterStates} />
     </>
   );
 }

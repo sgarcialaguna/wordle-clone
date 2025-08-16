@@ -32,16 +32,16 @@
       }
 
       &[data-state="correct_position"] {
-          background: #538d4e;
+          background: var(--correct);
       }
 
       &[data-state="correct_letter"] {
-          background: #b59f3b;
+          background: var(--present);
       }
 
       &[data-state="incorrect_letter"] {
-          background: #3a3a3c;
-          border-color: #3a3a3c;
+          background: var(--absent);
+          border-color: var(--absent);
       }
 
   }
