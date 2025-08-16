@@ -1,46 +1,47 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import styles from "./board.module.css";
+import Row from "./Row";
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "keydown": {
+      const key = action.payload;
+      if (key.match(/^[a-z]$/)) {
+        if (state.guesses[state.currentRow].length >= 5) {
+          return state;
+        }
+        // TODO
+        if (state.currentRow > 5) {
+          return state;
+        }
+
+        return {
+          ...state,
+          guesses: state.guesses.map((guess, index) => {
+            if (index === state.currentRow) {
+              return guess + key;
+            }
+            return guess;
+          }),
+        };
+      }
+    }
+    default: {
+      return state;
+    }
+  }
+}
 
 export default function Board() {
-  console.log("HELLO");
-  const [guesses, setGuesses] = useState<Array<string>>([
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-  ]);
-
-  const [currentRow, setCurrentRow] = useState(0);
-  console.log(guesses);
+  const [state, dispatch] = useReducer(reducer, {
+    guesses: ["", "", "", "", "", ""],
+    currentRow: 0,
+  });
 
   function handleKeyPress(ev: KeyboardEvent) {
-    const key = ev.key.toLowerCase();
-    if (key.match(/^[a-z]$/)) {
-      console.log(key);
-      if (guesses[currentRow].length >= 5) {
-        return;
-      }
-      // TODO
-      if (currentRow > 5) {
-        return;
-      }
-
-      setGuesses((guesses) =>
-        guesses.map((guess, index) => {
-          if (index === currentRow) {
-            return guess + key;
-          }
-          return guess;
-        })
-      );
-      return;
-    }
+    dispatch({ type: "keydown", payload: ev.key.toLowerCase() });
   }
 
   useEffect(() => {
@@ -50,36 +51,12 @@ export default function Board() {
 
   return (
     <div className={styles.board}>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
-      <div className="cell"></div>
+      <Row guess={state.guesses[0]}></Row>
+      <Row guess={state.guesses[1]}></Row>
+      <Row guess={state.guesses[2]}></Row>
+      <Row guess={state.guesses[3]}></Row>
+      <Row guess={state.guesses[4]}></Row>
+      <Row guess={state.guesses[5]}></Row>
     </div>
   );
 }
