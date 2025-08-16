@@ -29,13 +29,15 @@
     text-transform: uppercase;
     -webkit-tap-highlight-color: rgba(0, 0, 0, .3);
 
-    &[data-state="correct_letter"] {
-        background: var(--correct)
+    &[data-state="correct_position"] {
+        background: var(--correct);
     }
 
-    &[data-state="correct_position"] {
-        background: var(--present);
+    &[data-state="correct_letter"] {
+        background: var(--present)
     }
+
+
 
     &[data-state="incorrect_letter"] {
         background: var(--absent);
