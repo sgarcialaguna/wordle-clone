@@ -13,7 +13,7 @@ import Keyboard from "./Keyboard";
 declare type GameState = "in_progress" | "lost" | "won";
 
 declare type State = {
-  letterStates: Record<string, RowState>;
+  letterStates: Record<string, RowState[number]>;
   gameState: "in_progress" | "lost" | "won";
   guesses: Array<string>;
   currentRow: number;
@@ -67,9 +67,23 @@ function reducer(state: State, action: Action): State {
       let gameState: GameState = "in_progress";
       let letterStates = { ...state.letterStates };
       const currentGuess = state.guesses[state.currentRow];
+      const lookup: Record<RowState[number], number> = {
+        unknown: -1,
+        incorrect_letter: 0,
+        correct_letter: 1,
+        correct_position: 2,
+      };
       for (let i = 0; i < currentGuess.length; i++) {
-        letterStates[currentGuess[i]] =
-          state.letterStates[currentGuess[i]] || action.payload[i];
+        const newValue: RowState[number] = action.payload[i];
+        const oldValue: RowState[number] = letterStates[currentGuess[i]];
+        console.log(newValue);
+        console.log(oldValue);
+        if (!oldValue) {
+          letterStates[currentGuess[i]] = newValue;
+        } else {
+          letterStates[currentGuess[i]] =
+            lookup[newValue] > lookup[oldValue] ? newValue : oldValue;
+        }
       }
 
       if (action.payload.every((s) => s === "correct_position")) {

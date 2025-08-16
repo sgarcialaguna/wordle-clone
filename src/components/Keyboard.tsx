@@ -2,7 +2,7 @@ import styles from "./Keyboard.module.css";
 import type { RowState } from "./Row";
 
 export default function Keyboard(props: {
-  letterStates: Record<string, RowState>;
+  letterStates: Record<string, RowState[number]>;
 }) {
   return (
     <>

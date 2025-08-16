@@ -52,7 +52,7 @@ export default function Cell({
     }
     cellRef.current.addEventListener("animationend", clearAnimation);
     return () =>
-      cellRef.current!.removeEventListener("animationend", clearAnimation);
+      cellRef.current?.removeEventListener("animationend", clearAnimation);
   }, []);
 
   return (
