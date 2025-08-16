@@ -1,0 +1,7 @@
+.customToast {
+    width: auto;
+    font-size: 0.75rem;
+    font-weight: bolder;
+    color: black;
+    text-transform: uppercase;
+}

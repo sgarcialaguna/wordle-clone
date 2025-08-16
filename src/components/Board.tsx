@@ -3,8 +3,11 @@
 import { useEffect, useReducer, useState } from "react";
 import styles from "./board.module.css";
 import Row, { type RowState } from "./Row";
+import { ToastContainer, toast } from "react-toastify";
+import toastStyles from "./customToast.module.css";
 
 import { actions } from "astro:actions";
+import CustomToast from "./CustomToast";
 
 declare type GameState = "in_progress" | "lost" | "won";
 
@@ -120,7 +123,7 @@ export default function Board() {
 
   useEffect(() => {
     if (state.gameState === "lost") {
-      window.setTimeout(() => alert("OH NOES"), 250 * 5);
+      toast(CustomToast, { data: "Game over" });
     } else if (state.gameState === "won") {
       const successMessages = [
         "Genius",
@@ -131,22 +134,32 @@ export default function Board() {
         "Phew",
       ];
       window.setTimeout(
-        () => alert(successMessages[state.currentRow - 1]),
-        250 * 5
+        () =>
+          toast(CustomToast, { data: successMessages[state.currentRow - 1] }),
+        250 * 6
       );
     }
   }, [state.gameState, state.currentRow]);
 
   return (
-    <div className={styles.board}>
-      {[0, 1, 2, 3, 4, 5].map((index) => (
-        <Row
-          key={index}
-          guess={state.guesses[index]}
-          state={state.rowStates[index]}
-          invalid={invalidRow === index}
-        ></Row>
-      ))}
-    </div>
+    <>
+      <div className={styles.board}>
+        {[0, 1, 2, 3, 4, 5].map((index) => (
+          <Row
+            key={index}
+            guess={state.guesses[index]}
+            state={state.rowStates[index]}
+            invalid={invalidRow === index}
+          ></Row>
+        ))}
+      </div>
+      <ToastContainer
+        hideProgressBar
+        closeButton={false}
+        position="top-center"
+        autoClose={false}
+        toastClassName={toastStyles.customToast}
+      />
+    </>
   );
 }
