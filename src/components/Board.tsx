@@ -98,7 +98,12 @@ export default function Board() {
     } else if (key === "Backspace") {
       dispatch({ type: "remove_letter" });
     } else if (key === "Enter") {
-      const { data } = await actions.evaluate(state.guesses[state.currentRow]);
+      const currentGuess = state.guesses[state.currentRow];
+      if (currentGuess.length < 5) {
+        alert("Not enough letters");
+        return;
+      }
+      const { data } = await actions.evaluate(currentGuess);
       dispatch({
         type: "set_row_state",
         payload: data!,

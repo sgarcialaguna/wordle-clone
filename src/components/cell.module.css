@@ -21,15 +21,16 @@
       }
 
       &.correct_position {
-          background: green
+          background: #538d4e;
       }
 
       &.correct_letter {
-          background: yellow
+          background: #b59f3b;
       }
 
       &.incorrect_letter {
-          background: grey
+          background: #3a3a3c;
+          border-color: #3a3a3c;
       }
 
   }
