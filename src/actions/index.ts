@@ -10,6 +10,7 @@ export const server = {
     evaluate: defineAction({
         input: z.string(),
         handler: (guess) => {
+
             const solution = "level";
             const response: Array<LetterState> = [];
             for (let i = 0; i < solution.length; i++) {

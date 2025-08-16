@@ -47,8 +47,8 @@ Feel free to check [our documentation](https://docs.astro.build) or jump into ou
 
 TODO:
 [] Animations
-[] Overall game state
+[x] Overall game state
 [] Validations
 [] More than one solution
-[] Deploy
+[x] Deploy
 [] Keyboard

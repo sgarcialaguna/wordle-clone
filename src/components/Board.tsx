@@ -6,7 +6,10 @@ import Row, { type RowState } from "./Row";
 
 import { actions } from "astro:actions";
 
+declare type GameState = "in_progress" | "lost" | "won";
+
 declare type State = {
+  gameState: "in_progress" | "lost" | "won";
   guesses: Array<string>;
   currentRow: number;
   rowStates: Array<RowState>;
@@ -15,17 +18,15 @@ declare type State = {
 declare type Action =
   | {
       type: "add_letter";
-      payload: {
-        key: string;
-      };
+      payload: string;
     }
-  | { type: "set_row_state"; payload: { row_state: RowState } }
+  | { type: "set_row_state"; payload: RowState }
   | { type: "remove_letter" | "submit" };
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case "add_letter": {
-      const { key } = action.payload;
+      const key = action.payload;
       if (key.match(/^[a-z]$/)) {
         if (state.guesses[state.currentRow].length >= 5) {
           return state;
@@ -58,10 +59,17 @@ function reducer(state: State, action: Action): State {
         ],
       };
     case "set_row_state": {
+      let gameState: GameState = "in_progress";
+      if (action.payload.every((s) => s === "correct_position")) {
+        gameState = "won";
+      } else if (state.currentRow === 5) {
+        gameState = "lost";
+      }
       return {
         ...state,
         currentRow: state.currentRow + 1,
-        rowStates: [...state.rowStates, action.payload.row_state],
+        rowStates: [...state.rowStates, action.payload],
+        gameState,
       };
     }
     default: {
@@ -72,6 +80,7 @@ function reducer(state: State, action: Action): State {
 
 export default function Board() {
   const [state, dispatch] = useReducer(reducer, {
+    gameState: "in_progress",
     guesses: ["", "", "", "", "", ""],
     currentRow: 0,
     rowStates: [],
@@ -79,21 +88,44 @@ export default function Board() {
 
   async function handleKeyPress(ev: KeyboardEvent) {
     const key = ev.key;
+
+    if (state.gameState !== "in_progress") {
+      return;
+    }
+
     if (key.match(/^[a-z]$/i)) {
-      dispatch({ type: "add_letter", payload: { key: ev.key.toLowerCase() } });
+      dispatch({ type: "add_letter", payload: ev.key.toLowerCase() });
     } else if (key === "Backspace") {
       dispatch({ type: "remove_letter" });
     } else if (key === "Enter") {
       const { data } = await actions.evaluate(state.guesses[state.currentRow]);
-      console.log(data);
-      dispatch({ type: "set_row_state", payload: { row_state: data! } });
+      dispatch({
+        type: "set_row_state",
+        payload: data!,
+      });
     }
   }
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
-    return () => window.addEventListener("keydown", handleKeyPress);
-  }, []);
+    return () => document.removeEventListener("keydown", handleKeyPress);
+  }, [state.guesses, state.currentRow, state.gameState]);
+
+  useEffect(() => {
+    if (state.gameState === "lost") {
+      alert("OH NOES");
+    } else if (state.gameState === "won") {
+      const successMessages = [
+        "Genius",
+        "Magnificent",
+        "Impressive",
+        "Splendid",
+        "Great",
+        "Phew",
+      ];
+      alert(successMessages[state.currentRow - 1]);
+    }
+  }, [state.gameState, state.currentRow]);
 
   return (
     <div className={styles.board}>
