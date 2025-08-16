@@ -11,7 +11,7 @@ export const server = {
         input: z.string(),
         handler: (guess) => {
 
-            const solution = "level";
+            const solution = "cigar";
             const response: Array<LetterState> = [];
             for (let i = 0; i < solution.length; i++) {
                 if (solution[i] === guess[i]) {
