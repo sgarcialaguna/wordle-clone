@@ -20,6 +20,18 @@
           animation-duration: 100ms;
       }
 
+      &.correct_position {
+          background: green
+      }
+
+      &.correct_letter {
+          background: yellow
+      }
+
+      &.incorrect_letter {
+          background: grey
+      }
+
   }
 
   @keyframes PopIn {
