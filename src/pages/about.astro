@@ -18,15 +18,44 @@ import Layout from "../layouts/Layout.astro";
       Also see <a href="https://santiagogarcia.de/">my homepage</a> for more about
       myself and ways to get in contact with me.
     </p>
-  </article>
-</Layout>
 
-<style>
-  .container {
-    color: white;
-    padding: 2rem;
-  }
-  a {
-    color: #4493f8;
-  }
-</style>
+    <h2>Features</h2>
+
+    <ul>
+      <li>
+        <a
+          href="https://pagespeed.web.dev/analysis/https-sgarcia-wordle-clone-netlify-app/3ctdjnw8pj?form_factor=mobile"
+          >Lighthouse Score: 100</a
+        >
+      </li>
+      <li>
+        New word selected every day from the actual list Wordle uses. (But not
+        in the same order)
+      </li>
+      <li>
+        Validation on the server. Unlike with actual Wordle, you can't just read
+        the solution in the DevTools. Instead, you'd have to read the solution
+        in the source code. Much security.
+      </li>
+    </ul>
+
+    <h2>Possible Improvements</h2>
+
+    <ul>
+      <li>Remember game state, say, in local storage</li>
+      <li>Some animations are missing, e.g. the victory animation</li>
+      <li>The toasts are pretty far from the toasts on the real Wordle</li>
+    </ul>
+  </article>
+
+  <style>
+    .container {
+      color: white;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    a {
+      color: #4493f8;
+    }
+  </style>
+</Layout>
