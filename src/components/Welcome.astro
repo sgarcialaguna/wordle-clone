@@ -2,25 +2,4 @@
 import Board from "./Board";
 ---
 
-<header></header>
-<main>
-  <Board client:load />
-</main>
-
-<style>
-  :root {
-    --correct: #538d4e;
-    --present: #b59f3b;
-    --absent: #3a3a3c;
-    --flip-timeout: 250;
-  }
-
-  header {
-    height: 56px;
-    border-bottom: 1px solid rgb(66, 66, 66);
-  }
-
-  main {
-    padding-inline: 0.5rem;
-  }
-</style>
+<Board client:load />
