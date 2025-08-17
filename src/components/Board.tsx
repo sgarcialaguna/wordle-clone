@@ -169,8 +169,15 @@ export default function Board() {
   }, []);
 
   useEffect(() => {
+    const flipTimeout = Number(
+      window.getComputedStyle(document.body).getPropertyValue("--flip-timeout")
+    );
+
     if (state.gameState === "lost") {
-      toast(CustomToast, { data: "Game over" });
+      window.setTimeout(
+        () => toast(CustomToast, { data: "Game over" }),
+        flipTimeout * 6
+      );
     } else if (state.gameState === "won") {
       const successMessages = [
         "Genius",
@@ -183,7 +190,7 @@ export default function Board() {
       window.setTimeout(
         () =>
           toast(CustomToast, { data: successMessages[state.currentRow - 1] }),
-        250 * 6
+        flipTimeout * 6
       );
     }
   }, [state.gameState, state.currentRow]);

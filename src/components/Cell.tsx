@@ -34,12 +34,18 @@ export default function Cell({
   }, [invalid]);
 
   useEffect(() => {
+    const flipTimeout = Number(
+      window.getComputedStyle(document.body).getPropertyValue("--flip-timeout")
+    );
     if (letter && (!state || state === "unknown")) {
       setAnimation("pop");
     } else if (state && state !== "unknown") {
-      setAnimationDelay(`${index * 250}ms`);
+      setAnimationDelay(`${index * flipTimeout}ms`);
       setAnimation("flip");
-      window.setTimeout(() => setDelayedState(state), index * 250 + 250);
+      window.setTimeout(
+        () => setDelayedState(state),
+        index * flipTimeout + flipTimeout
+      );
     }
   }, [letter, state]);
 
