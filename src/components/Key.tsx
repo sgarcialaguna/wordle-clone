@@ -19,6 +19,7 @@ export default function Key({
         event.preventDefault();
         document.dispatchEvent(new KeyboardEvent("keydown", { key: letter }));
       }}
+      aria-label={letter}
     >
       {children || letter}
     </button>

@@ -136,7 +136,12 @@ export default function Board() {
         return;
       }
       setInputBlocked(true);
-      const { data } = await actions.evaluate(currentGuess);
+      const { data, error } = await actions.evaluate(currentGuess);
+      if (error) {
+        setInputBlocked(false);
+        toast(error.message, { autoClose: 600 });
+        return;
+      }
       dispatch({
         type: "set_row_state",
         payload: data!,
