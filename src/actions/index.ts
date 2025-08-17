@@ -1,6 +1,7 @@
 import { ActionError, defineAction } from "astro:actions";
 import { z } from "astro:schema";
 
+import allWords from './allwords.json'
 import solutions from './solutions.json'
 
 const solutionIndex = Math.floor((new Date() - new Date(2025, 7, 15)) / 86400000)
@@ -15,7 +16,7 @@ export const server = {
     evaluate: defineAction({
         input: z.string(),
         handler: (guess) => {
-            if (!solutions.includes(guess)) {
+            if (!allWords.includes(guess)) {
                 throw new ActionError({ message: "Unknown word", code: "BAD_REQUEST" })
             }
             const response: Array<LetterState> = [];
