@@ -139,7 +139,7 @@ export default function Board() {
       const { data, error } = await actions.evaluate(currentGuess);
       if (error) {
         setInputBlocked(false);
-        toast(error.message, { autoClose: 600 });
+        toast(error.message);
         return;
       }
       dispatch({
@@ -216,8 +216,8 @@ export default function Board() {
         hideProgressBar
         closeButton={false}
         position="top-center"
-        autoClose={false}
         toastClassName={toastStyles.customToast}
+        autoClose={600}
       />
       <Keyboard letterStates={state.letterStates} />
     </>
