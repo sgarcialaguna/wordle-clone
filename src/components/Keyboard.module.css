@@ -4,6 +4,7 @@
     margin-inline: auto;
     margin-block: 1rem;
     justify-content: center;
+
 }
 
 .Key {
@@ -14,10 +15,10 @@
     padding: 0;
     margin: 0 calc(4px * 1.5) 0 0;
     flex: 58px 0 0;
-    height: 58px;
+    height: 59px;
     border-radius: 4px;
-    /* cursor: pointer; */
-    cursor: not-allowed;
+    cursor: pointer;
+    /* cursor: not-allowed; */
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
@@ -29,6 +30,14 @@
     text-transform: uppercase;
     -webkit-tap-highlight-color: rgba(0, 0, 0, .3);
 
+    @media only screen and (max-width: 600px) {
+        flex-shrink: 1;
+    }
+
+    &.Enter {
+        font-size: 0.75em;
+    }
+
     &[data-state="correct_position"] {
         background: var(--correct);
     }
@@ -36,8 +45,6 @@
     &[data-state="correct_letter"] {
         background: var(--present)
     }
-
-
 
     &[data-state="incorrect_letter"] {
         background: var(--absent);
