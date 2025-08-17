@@ -76,8 +76,6 @@ function reducer(state: State, action: Action): State {
       for (let i = 0; i < currentGuess.length; i++) {
         const newValue: RowState[number] = action.payload[i];
         const oldValue: RowState[number] = letterStates[currentGuess[i]];
-        console.log(newValue);
-        console.log(oldValue);
         if (!oldValue) {
           letterStates[currentGuess[i]] = newValue;
         } else {
@@ -114,8 +112,12 @@ export default function Board() {
     letterStates: {},
   });
   const [invalidRow, setInvalidRow] = useState<number | undefined>(undefined);
+  const [inputBlocked, setInputBlocked] = useState(false);
 
   async function handleKeyPress(ev: KeyboardEvent) {
+    if (inputBlocked) {
+      return;
+    }
     const key = ev.key;
 
     if (state.gameState !== "in_progress") {
@@ -133,6 +135,7 @@ export default function Board() {
         window.setTimeout(() => setInvalidRow(undefined), 600);
         return;
       }
+      setInputBlocked(true);
       const { data } = await actions.evaluate(currentGuess);
       dispatch({
         type: "set_row_state",
@@ -144,7 +147,26 @@ export default function Board() {
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
     return () => document.removeEventListener("keydown", handleKeyPress);
-  }, [state.guesses, state.currentRow, state.gameState]);
+  }, [state.guesses, state.currentRow, state.gameState, inputBlocked]);
+
+  // Block input until flip animations are done
+  useEffect(() => {
+    let counter = 0;
+    function handleAnimationEnd(ev: AnimationEvent) {
+      if (ev.animationName.toLowerCase().includes("flip")) {
+        counter += 1;
+        if (counter >= 5) {
+          counter = 0;
+          setInputBlocked(false);
+        }
+      }
+    }
+
+    document.addEventListener("animationend", handleAnimationEnd);
+    return () => {
+      document.removeEventListener("animationend", handleAnimationEnd);
+    };
+  }, []);
 
   useEffect(() => {
     if (state.gameState === "lost") {

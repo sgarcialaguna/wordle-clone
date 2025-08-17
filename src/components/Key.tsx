@@ -17,9 +17,7 @@ export default function Key({
       data-state={letterState}
       onClick={(event) => {
         event.preventDefault();
-        console.log("HELLO");
         document.dispatchEvent(new KeyboardEvent("keydown", { key: letter }));
-        document.dispatchEvent(new KeyboardEvent("keyup", { key: letter }));
       }}
     >
       {children || letter}
